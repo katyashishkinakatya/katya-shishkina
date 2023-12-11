@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оформление заказа</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form {
+      background-color: #fff;
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 80%;
+      max-width: 400px;
+      margin: auto;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      width: calc(100% - 10px);
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="submit"],
+    select {
+      background-color: #f5f5f5;
+    }
+
+    input[type="submit"] {
+      background: #3498db;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    input[type="submit"]:hover 
+    {
+      background: #2980b9;
+    }
+
+    modal img {
+      max-width: 20%;
+      height: auto;
+      transform: scale(0.5);
+      object-fit: cover;
+    }
+
+    @media (max-width: 600px) {
+      label {
+        display: none;
+      }
+
+      input,
+      select {
+        margin-bottom: 8px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background-color: #fff;
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="orderForm">
+    <label for="article">Артикул товара:</label>
+    <input type="text" id="article" name="article" placeholder="Артикул" required>
+
+    <label for="firstName">Имя:</label>
+    <input type="text" id="firstName" name="firstName" placeholder="Ваше имя" required>
+
+    <label for="lastName">Фамилия:</label>
+    <input type="text" id="lastName" name="lastName" placeholder="Ваша фамилия" required>
+
+    <label for="email">Электронная почта:</label>
+    <input type="email" id="email" name="email" placeholder="example@example.com" required>
+
+    <label for="phone">Телефон:</label>
+    <input type="tel" id="phone" name="phone" placeholder="+7 (123) 456-7890" required>
+
+    <label for="address">Адрес доставки:</label>
+    <input type="text" id="address" name="address" placeholder="Адрес доставки" required>
+
+    <label for="delivery">Вид доставки:</label>
+    <select id="delivery" name="delivery">
+      <option value="standard">Стандарт</option>
+      <option value="express">Экспресс</option>
+    </select>
+
+    <label for="payment">Способ оплаты:</label>
+    <select id="payment" name="payment">
+      <option value="card">Карта</option>
+      <option value="cash">Наличные</option>
+    </select>
+
+    <label for="promoCode">Промокод:</label>
+    <input type="text" id="promoCode" name="promoCode" placeholder="Промокод">
+
+    <input type="submit" value="Оплатить">
+  </form>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <div id="outputData"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("orderForm");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const requiredFields = ["article", "firstName", "lastName", "email", "phone", "address", "delivery", "payment"];
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+          const input = document.getElementById(field);
+          if (!input.value.trim()) {
+            isValid = false;
+            alert(`Пожалуйста, заполните поле "${input.placeholder}"`);
+          }
+        });
+
+        const emailInput = document.getElementById("email");
+        const phoneInput = document.getElementById("phone");
+
+        if (!isValidEmail(emailInput.value)) {
+          isValid = false;
+          alert("Пожалуйста, введите корректный адрес электронной почты");
+        }
+
+        if (!isValidPhone(phoneInput.value)) {
+          isValid = false;
+          alert("Пожалуйста, введите корректный номер телефона");
+        }
+
+        if (isValid) {
+          const productInfo = {
+            dressType: "Красное платье",
+            size: "42",
+            brand: "Екатерина",
+            photo: "/Users/alina/Desktop/Новая папка с объектами/tuwgbf3y1y75szn8fo3n338qg8nn74pf-1.webp",
+            deliveryDate: "2023-12-20",
+            price: "5790",
+          };
+
+          displayData(productInfo);
+          form.reset();
+        }
+      });
+
+      function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      function isValidPhone(phone) {
+        const phoneRegex = /^\+?[0-9\s()-]+$/;
+        return phoneRegex.test(phone);
+      }
+
+      function displayData(productInfo) {
+        const formData = new FormData(form);
+        let displayText = `<h2>Заказ оформлен успешно!</h2>`;
+        displayText += `<p><strong>Товар:</strong> ${productInfo.dressType}</p>`;
+        displayText += `<p><strong>Размер:</strong> ${productInfo.size}</p>`;
+        displayText += `<p><strong>Бренд:</strong> ${productInfo.brand}</p>`;
+        displayText += `<img src="${productInfo.photo}" alt="${productInfo.dressType}" style="max-width: 20%; width: 20%;">`;
+        displayText += `<p><strong>Предполагаемая дата доставки:</strong> ${productInfo.deliveryDate}</p>`;
+        displayText += `<p><strong>Цена:</strong> ${productInfo.price} руб.</p>`;
+
+        for (const [key, value] of formData.entries()) {
+          displayText += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+
+        displayText += '<p style="cursor: pointer;" onclick="resetForm()">Нажмите здесь, чтобы закрыть</p>';
+
+        document.getElementById("outputData").innerHTML = displayText;
+        openModal();
+      }
+
+      function openModal() {
+        document.getElementById("overlay").style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("overlay").style.display = "none";
+      }
+
+      window.resetForm = function () {
+        document.getElementById("overlay").style.display = "none";
+        form.reset();
+      };
+    });
+
+    document.addEventListener("input", function (event) {
+      const target = event.target;
+      if (target.matches("#article") || target.matches("#phone")) {
+        target.value = target.value.replace(/[^\d]/g, '');
+      }
+    });
+  </script>
+</body>
+</html>
