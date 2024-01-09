@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Sand Timer Animation</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .sand-timer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0; /* Цвет фона */
+      position: relative;
+    }
+
+    .sand-container {
+      position: relative;
+      width: 50px;
+      height: 200px;
+      border: 2px solid #333;
+      margin: 0 10px;
+      overflow: hidden; /* Добавлено свойство overflow для скрытия избыточного содержимого */
+    }
+
+    .sand {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      background-color: #ffd700; /* Цвет песка */
+      animation: flow 5s linear infinite;
+    }
+
+    .divider {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #333; /* Цвет черной палки */
+    }
+
+    .empty-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background-color: #f0f0f0; /* Цвет фона для пустого контейнера */
+    }
+
+    @keyframes flow {
+      0% {
+        height: 0;
+      }
+      100% {
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sand-timer">
+    <div class="sand-container">
+      <div class="sand"></div>
+      <div class="divider"></div>
+      <div class="empty-container"></div>
+    </div>
+  </div>
+</body>
+</html>
