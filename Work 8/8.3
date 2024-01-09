@@ -1,0 +1,92 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Получаем данные из формы
+    $full_name = htmlspecialchars($_POST["full_name"]);
+    $login = htmlspecialchars($_POST["login"]);
+    $password = htmlspecialchars($_POST["password"]);
+    $dob = htmlspecialchars($_POST["dob"]);
+
+    // Теперь можно обрабатывать и сохранять эти данные (например, в базе данных)
+
+    // Выводим сообщение об успешной регистрации
+    echo "<h3 style='text-align: center; color: red;'>Регистрация успешна!</h3>";
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-form {
+            background-color: #ff6666;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            box-sizing: border-box;
+        }
+
+        .registration-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .registration-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .registration-form button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="registration-form">
+    <h2>Регистрация пользователя</h2>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <label for="full_name">ФИО:</label>
+        <input type="text" id="full_name" name="full_name" required>
+
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="dob">Дата рождения:</label>
+        <input type="date" id="dob" name="dob" required>
+
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</div>
+
+</body>
+</html>
